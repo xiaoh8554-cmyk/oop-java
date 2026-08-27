@@ -1,0 +1,5 @@
+# APU Medical Centre - Doctors Child Table
+# Format: ID|SPECIALIZATION|QUALIFICATION|ROOM_NUMBER|CONSULTATION_FEE
+DOC-301|Cardiology|MD, FACC, FRCP|Consultation Suite 302|180.0
+DOC-302|Pediatrics & Child Health|MBBS, MRCPCH|Pediatric Clinic 108|120.0
+DOC-999|Neurology|MBBS, MD|Room 505|250.0

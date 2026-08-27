@@ -57,6 +57,16 @@ public class AdminStaff extends User {
     }
 
     @Override
+    public String toChildFileString() {
+        return String.join("|",
+                getId(),
+                getDepartment(),
+                getShift(),
+                getStaffRank()
+        );
+    }
+
+    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),

@@ -78,6 +78,18 @@ public class Patient extends User {
     }
 
     @Override
+    public String toChildFileString() {
+        return String.join("|",
+                getId(),
+                getDateOfBirth(),
+                getGender(),
+                getBloodGroup(),
+                getEmergencyContact(),
+                getMedicalHistorySummary()
+        );
+    }
+
+    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),

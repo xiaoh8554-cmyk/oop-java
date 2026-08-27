@@ -67,6 +67,17 @@ public class Doctor extends User {
     }
 
     @Override
+    public String toChildFileString() {
+        return String.join("|",
+                getId(),
+                getSpecialization(),
+                getQualification(),
+                getRoomNumber(),
+                String.valueOf(getConsultationFee())
+        );
+    }
+
+    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),

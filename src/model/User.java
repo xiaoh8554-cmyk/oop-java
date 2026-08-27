@@ -113,7 +113,30 @@ public abstract class User implements Serializable {
     public abstract String getRoleSpecificInfo();
 
     /**
-     * Converts user data into text format for file persistence.
+     * Converts base user data into text format for parent table (users.txt).
+     * Format: ROLE|ID|USERNAME|PASSWORD|FULL_NAME|EMAIL|PHONE|CREATED_AT
+     */
+    public String toBaseFileString() {
+        return String.join("|",
+                role.name(),
+                id,
+                username,
+                password,
+                fullName,
+                email,
+                phoneNumber,
+                createdAt
+        );
+    }
+
+    /**
+     * Converts role-specific child data into text format for child tables.
+     * Format: ID|...childSpecificFields
+     */
+    public abstract String toChildFileString();
+
+    /**
+     * Converts user data into text format for monolithic file persistence (backwards compatibility).
      * Format: ROLE|id|username|password|fullName|email|phoneNumber|createdAt|...extraFields
      */
     public abstract String toFileString();

@@ -1,0 +1,4 @@
+# APU Medical Centre - Patients Child Table
+# Format: ID|DATE_OF_BIRTH|GENDER|BLOOD_GROUP|EMERGENCY_CONTACT|MEDICAL_HISTORY
+PAT-401|1992-08-14|Male|O+|+60 18-999 3344 (Mary Doe - Spouse)|Hypertension (Stage 1), Penicillin Allergy
+PAT-402|1998-03-22|Female|B+|+60 11-555 9900 (Chen Wei - Father)|Asthma (Mild intermittent), No known allergies

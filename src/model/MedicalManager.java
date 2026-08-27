@@ -57,6 +57,16 @@ public class MedicalManager extends User {
     }
 
     @Override
+    public String toChildFileString() {
+        return String.join("|",
+                getId(),
+                getDivision(),
+                getManagementTitle(),
+                getAssignedDepartment()
+        );
+    }
+
+    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),
