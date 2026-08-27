@@ -15,5 +15,6 @@ b. git push
   4. git push origin 'branch name'
 
 c. git pull
-  git pull origin main
+  1. git pull origin main
+
 
