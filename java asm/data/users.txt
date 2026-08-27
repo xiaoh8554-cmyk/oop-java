@@ -1,8 +1,0 @@
-# APU Medical Centre - User Accounts Database
-# Format: ROLE|ID|USERNAME|PASSWORD|FULL_NAME|EMAIL|PHONE|CREATED_AT|[ROLE_SPECIFIC_FIELDS...]
-ADMIN_STAFF|STF-101|admin_staff|admin123|Anna Watson|staff@apumedical.edu.my|+60 14-222 3456|2026-08-28 00:50:33|Front Desk & Patient Admissions|Morning (08:00 - 16:00)|Lead Administrative Officer
-MEDICAL_MANAGER|MGR-201|med_manager|manager123|Prof. Dr. Alex Wong|manager@apumedical.edu.my|+60 12-345 6789|2026-08-28 00:50:33|Clinical Services & Governance|Chief Medical Director|Inpatient & Outpatient Divisions
-DOCTOR|DOC-301|dr_smith|doctor123|Dr. Sarah Smith|doctor@apumedical.edu.my|+60 13-888 1234|2026-08-28 00:50:33|Cardiology|MD, FACC, FRCP|Consultation Suite 302|180.0
-DOCTOR|DOC-302|dr_lee|doctor123|Dr. Michael Lee|m.lee@apumedical.edu.my|+60 17-777 5678|2026-08-28 00:50:33|Pediatrics & Child Health|MBBS, MRCPCH|Pediatric Clinic 108|120.0
-PATIENT|PAT-401|patient_john|patient123|Johnathan Doe|john.doe@gmail.com|+60 18-999 1122|2026-08-28 00:50:33|1992-08-14|Male|O+|+60 18-999 3344 (Mary Doe - Spouse)|Hypertension (Stage 1), Penicillin Allergy
-PATIENT|PAT-402|patient_emily|patient123|Emily Chen|emily.chen@gmail.com|+60 11-555 7788|2026-08-28 00:50:33|1998-03-22|Female|B+|+60 11-555 9900 (Chen Wei - Father)|Asthma (Mild intermittent), No known allergies
