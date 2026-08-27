@@ -9,12 +9,11 @@ a. git clone to file
 
 b. git push
   type the command below in vscode by following
-  git init
-  git add .
-  git commit -am "leave a command or message on this push, e.g. whhat you update/do"
-  git push origin 'branch name'
+  1. git init
+  2. git add .
+  3. git commit -am "leave a command or message on this push, e.g. whhat you update/do"
+  4. git push origin 'branch name'
 
 c. git pull
-  type the command below in vscode by following
   git pull origin main
 
