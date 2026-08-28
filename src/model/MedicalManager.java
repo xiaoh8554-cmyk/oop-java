@@ -19,6 +19,14 @@ public class MedicalManager extends User {
         this.assignedDepartment = assignedDepartment != null ? assignedDepartment : "All Clinical Divisions";
     }
 
+    public MedicalManager(String id, String username, String password, String fullName, String email, String phoneNumber,
+                          String createdAt, String division, String managementTitle, String assignedDepartment) {
+        super(id, username, password, fullName, email, phoneNumber, UserRole.MEDICAL_MANAGER, createdAt);
+        this.division = division;
+        this.managementTitle = managementTitle;
+        this.assignedDepartment = assignedDepartment;
+    }
+
     public String getDivision() {
         return division;
     }
@@ -49,16 +57,6 @@ public class MedicalManager extends User {
     }
 
     @Override
-    public String toChildFileString() {
-        return String.join("|",
-                getId(),
-                getDivision(),
-                getManagementTitle(),
-                getAssignedDepartment()
-        );
-    }
-
-    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),
@@ -68,6 +66,7 @@ public class MedicalManager extends User {
                 getFullName(),
                 getEmail(),
                 getPhoneNumber(),
+                getCreatedAt(),
                 getDivision(),
                 getManagementTitle(),
                 getAssignedDepartment()
