@@ -138,7 +138,49 @@ public class SystemTest {
             System.err.println("❌ [FAIL] Non-existent user test failed, got: " + s10);
         }
 
-        // Test 12: Logout
+        // Test 12: Relational Persistence - Verify all 5 database files exist
+        totalTests++;
+        java.io.File fUsers = new java.io.File("data/users.txt");
+        java.io.File fStaff = new java.io.File("data/admin_staff.txt");
+        java.io.File fMgr = new java.io.File("data/medical_managers.txt");
+        java.io.File fDoc = new java.io.File("data/doctors.txt");
+        java.io.File fPat = new java.io.File("data/patients.txt");
+
+        if (fUsers.exists() && fStaff.exists() && fMgr.exists() && fDoc.exists() && fPat.exists()) {
+            System.out.println("✔ [PASS] Relational Architecture: All 5 parent-child text database files exist.");
+            testsPassed++;
+        } else {
+            System.err.println("❌ [FAIL] One or more relational data files are missing.");
+        }
+
+        // Test 13: Relational Foreign Key Integrity (Join verification)
+        totalTests++;
+        User dr = dm.findByUsernameOrEmail("dr_smith");
+        if (dr instanceof Doctor && ((Doctor) dr).getSpecialization().equals("Cardiology") &&
+            ((Doctor) dr).getRoomNumber().equals("Consultation Suite 302")) {
+            System.out.println("✔ [PASS] Relational Join: Parent record joined with Doctor child table data correctly.");
+            testsPassed++;
+        } else {
+            System.err.println("❌ [FAIL] Relational join failed for Doctor record.");
+        }
+
+        // Test 14: Dynamic Insert & Multi-file Persistence Verification
+        totalTests++;
+        Doctor newDoc = new Doctor("DOC-999", "dr_test_relational", "pass123", "Dr. Test Relational",
+                "test.relational@apumedical.edu.my", "+60 19-111 2233", "Neurology", "MBBS, MD", "Room 505", 250.0);
+        dm.addUser(newDoc);
+
+        // Reload data from disk in fresh manager check
+        DataManager.getInstance().loadUsers();
+        User reloadedDoc = dm.findByUsernameOrEmail("dr_test_relational");
+        if (reloadedDoc instanceof Doctor && ((Doctor) reloadedDoc).getSpecialization().equals("Neurology")) {
+            System.out.println("✔ [PASS] Dynamic Add & Relational Save: New record persisted to users.txt & doctors.txt.");
+            testsPassed++;
+        } else {
+            System.err.println("❌ [FAIL] Failed to save and reload relational record.");
+        }
+
+        // Test 15: Logout
         totalTests++;
         auth.logout();
         if (!auth.isLoggedIn()) {

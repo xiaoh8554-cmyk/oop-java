@@ -145,8 +145,8 @@ public class LoginFrame extends JFrame {
 
         JPanel card = UITheme.createCardPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setPreferredSize(new Dimension(380, 440));
-        card.setMaximumSize(new Dimension(400, 460));
+        card.setPreferredSize(new Dimension(380, 500));
+        card.setMaximumSize(new Dimension(400, 520));
 
         // Header inside card
         JLabel welcomeLabel = new JLabel("Sign In");
@@ -203,10 +203,16 @@ public class LoginFrame extends JFrame {
         errorLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // Sign In Button
-        loginButton = UITheme.createPrimaryButton("Sign In to Portal");
+        loginButton = UITheme.createPrimaryButton("Sign In");
         loginButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
         loginButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         loginButton.addActionListener(e -> performLogin());
+
+        // Register as Patient Button
+        JButton registerButton = UITheme.createOutlineButton("Register as New Patient");
+        registerButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+        registerButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        registerButton.addActionListener(e -> openPatientRegistrationDialog());
 
         // Enter key listeners
         KeyAdapter enterListener = new KeyAdapter() {
@@ -224,23 +230,35 @@ public class LoginFrame extends JFrame {
         card.add(welcomeLabel);
         card.add(Box.createVerticalStrut(4));
         card.add(promptLabel);
-        card.add(Box.createVerticalStrut(22));
+        card.add(Box.createVerticalStrut(18));
         card.add(idLabel);
         card.add(Box.createVerticalStrut(6));
         card.add(identifierField);
-        card.add(Box.createVerticalStrut(14));
+        card.add(Box.createVerticalStrut(12));
         card.add(passLabel);
         card.add(Box.createVerticalStrut(6));
         card.add(passwordField);
-        card.add(Box.createVerticalStrut(6));
+        card.add(Box.createVerticalStrut(4));
         card.add(showPasswordCheckBox);
         card.add(Box.createVerticalStrut(4));
         card.add(errorLabel);
-        card.add(Box.createVerticalStrut(12));
+        card.add(Box.createVerticalStrut(8));
         card.add(loginButton);
+        card.add(Box.createVerticalStrut(10));
+        card.add(registerButton);
 
         outer.add(card);
         return outer;
+    }
+
+    private void openPatientRegistrationDialog() {
+        PatientRegistrationDialog dialog = new PatientRegistrationDialog(this, (registeredUsername) -> {
+            identifierField.setText(registeredUsername);
+            passwordField.setText("");
+            passwordField.requestFocusInWindow();
+            errorLabel.setText(" ");
+        });
+        dialog.setVisible(true);
     }
 
     /**

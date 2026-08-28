@@ -171,14 +171,6 @@ public class MainDashboardFrame extends JFrame {
         sessUser.setFont(UITheme.FONT_SMALL);
         sessUser.setForeground(new Color(0x94, 0xA3, 0xB8));
 
-        JLabel sessRole = new JLabel("Access: " + currentUser.getRole().getDisplayName());
-        sessRole.setFont(UITheme.FONT_SMALL_BOLD);
-        sessRole.setForeground(new Color(0x38, 0xBD, 0xF8)); // Sky 400
-
-        sessionCard.add(sessUser);
-        sessionCard.add(Box.createVerticalStrut(2));
-        sessionCard.add(sessRole);
-
         sidebar.add(sessionCard);
 
         return sidebar;
@@ -435,7 +427,6 @@ public class MainDashboardFrame extends JFrame {
         detailsGrid.add(createDetailItem("Email / Gmail Address", currentUser.getEmail()));
         detailsGrid.add(createDetailItem("Contact Number", currentUser.getPhoneNumber()));
         detailsGrid.add(createDetailItem("Role-Specific Information", currentUser.getRoleSpecificInfo()));
-        detailsGrid.add(createDetailItem("Account Created Date", currentUser.getCreatedAt()));
 
         card.add(header, BorderLayout.NORTH);
         card.add(detailsGrid, BorderLayout.CENTER);

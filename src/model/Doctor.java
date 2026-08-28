@@ -20,15 +20,6 @@ public class Doctor extends User {
         this.consultationFee = consultationFee;
     }
 
-    public Doctor(String id, String username, String password, String fullName, String email, String phoneNumber,
-                  String createdAt, String specialization, String qualification, String roomNumber, double consultationFee) {
-        super(id, username, password, fullName, email, phoneNumber, UserRole.DOCTOR, createdAt);
-        this.specialization = specialization;
-        this.qualification = qualification;
-        this.roomNumber = roomNumber;
-        this.consultationFee = consultationFee;
-    }
-
     public String getSpecialization() {
         return specialization;
     }
@@ -67,6 +58,17 @@ public class Doctor extends User {
     }
 
     @Override
+    public String toChildFileString() {
+        return String.join("|",
+                getId(),
+                getSpecialization(),
+                getQualification(),
+                getRoomNumber(),
+                String.valueOf(getConsultationFee())
+        );
+    }
+
+    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),
@@ -76,7 +78,6 @@ public class Doctor extends User {
                 getFullName(),
                 getEmail(),
                 getPhoneNumber(),
-                getCreatedAt(),
                 getSpecialization(),
                 getQualification(),
                 getRoomNumber(),

@@ -1,0 +1,3 @@
+# APU Medical Centre - Medical Managers Child Table
+# Format: ID|DIVISION|MANAGEMENT_TITLE|ASSIGNED_DEPARTMENT
+MGR-201|Clinical Services & Governance|Chief Medical Director|Inpatient & Outpatient Divisions
