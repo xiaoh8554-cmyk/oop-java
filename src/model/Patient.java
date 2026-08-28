@@ -22,6 +22,16 @@ public class Patient extends User {
         this.medicalHistorySummary = medicalHistorySummary != null ? medicalHistorySummary : "None";
     }
 
+    public Patient(String id, String username, String password, String fullName, String email, String phoneNumber,
+                   String createdAt, String dateOfBirth, String gender, String bloodGroup, String emergencyContact, String medicalHistorySummary) {
+        super(id, username, password, fullName, email, phoneNumber, UserRole.PATIENT, createdAt);
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.bloodGroup = bloodGroup;
+        this.emergencyContact = emergencyContact;
+        this.medicalHistorySummary = medicalHistorySummary;
+    }
+
     public String getDateOfBirth() {
         return dateOfBirth;
     }
@@ -68,18 +78,6 @@ public class Patient extends User {
     }
 
     @Override
-    public String toChildFileString() {
-        return String.join("|",
-                getId(),
-                getDateOfBirth(),
-                getGender(),
-                getBloodGroup(),
-                getEmergencyContact(),
-                getMedicalHistorySummary()
-        );
-    }
-
-    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),
@@ -89,6 +87,7 @@ public class Patient extends User {
                 getFullName(),
                 getEmail(),
                 getPhoneNumber(),
+                getCreatedAt(),
                 getDateOfBirth(),
                 getGender(),
                 getBloodGroup(),

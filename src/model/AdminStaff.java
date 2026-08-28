@@ -21,7 +21,7 @@ public class AdminStaff extends User {
 
     public AdminStaff(String id, String username, String password, String fullName, String email, String phoneNumber,
                       String createdAt, String department, String shift, String staffRank) {
-        super(id, username, password, fullName, email, phoneNumber, UserRole.ADMIN_STAFF);
+        super(id, username, password, fullName, email, phoneNumber, UserRole.ADMIN_STAFF, createdAt);
         this.department = department;
         this.shift = shift;
         this.staffRank = staffRank;
@@ -57,16 +57,6 @@ public class AdminStaff extends User {
     }
 
     @Override
-    public String toChildFileString() {
-        return String.join("|",
-                getId(),
-                getDepartment(),
-                getShift(),
-                getStaffRank()
-        );
-    }
-
-    @Override
     public String toFileString() {
         return String.join("|",
                 getRole().name(),
@@ -76,6 +66,7 @@ public class AdminStaff extends User {
                 getFullName(),
                 getEmail(),
                 getPhoneNumber(),
+                getCreatedAt(),
                 getDepartment(),
                 getShift(),
                 getStaffRank()

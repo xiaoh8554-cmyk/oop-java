@@ -1,3 +1,0 @@
-# APU Medical Centre - Admin Staff Child Table
-# Format: ID|DEPARTMENT|SHIFT|STAFF_RANK
-STF-101|Front Desk & Patient Admissions|Morning (08:00 - 16:00)|Lead Administrative Officer
