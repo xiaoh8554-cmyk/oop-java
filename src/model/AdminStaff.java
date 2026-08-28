@@ -21,7 +21,7 @@ public class AdminStaff extends User {
 
     public AdminStaff(String id, String username, String password, String fullName, String email, String phoneNumber,
                       String createdAt, String department, String shift, String staffRank) {
-        super(id, username, password, fullName, email, phoneNumber, UserRole.ADMIN_STAFF, createdAt);
+        super(id, username, password, fullName, email, phoneNumber, UserRole.ADMIN_STAFF);
         this.department = department;
         this.shift = shift;
         this.staffRank = staffRank;
@@ -76,7 +76,6 @@ public class AdminStaff extends User {
                 getFullName(),
                 getEmail(),
                 getPhoneNumber(),
-                getCreatedAt(),
                 getDepartment(),
                 getShift(),
                 getStaffRank()

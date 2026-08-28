@@ -32,27 +32,26 @@ public class DataManager {
      * Temporary holding structure for base user records read from parent table.
      */
     private static class BaseUserData {
-        UserRole role;
-        String id;
-        String username;
-        String password;
-        String fullName;
-        String email;
-        String phoneNumber;
-        String createdAt;
+    UserRole role;
+    String id;
+    String username;
+    String password;
+    String fullName;
+    String email;
+    String phoneNumber;
 
-        BaseUserData(UserRole role, String id, String username, String password,
-                     String fullName, String email, String phoneNumber, String createdAt) {
-            this.role = role;
-            this.id = id;
-            this.username = username;
-            this.password = password;
-            this.fullName = fullName;
-            this.email = email;
-            this.phoneNumber = phoneNumber;
-            this.createdAt = createdAt;
-        }
+    BaseUserData(UserRole role, String id, String username, String password,
+                 String fullName, String email, String phoneNumber) {
+        this.role = role;
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
     }
+}
+
 
     private DataManager() {
         initDataDirectory();
@@ -79,10 +78,7 @@ public class DataManager {
     public synchronized void loadUsers() {
         users.clear();
         File usersFile = new File(USERS_FILE);
-
         if (!usersFile.exists()) {
-            seedDefaultUsers();
-            saveUsers();
             return;
         }
 
@@ -98,7 +94,7 @@ public class DataManager {
                     continue;
                 }
                 String[] parts = line.split("\\|", -1);
-                if (parts.length >= 8) {
+                if (parts.length >= 7) {
                     try {
                         UserRole role = UserRole.valueOf(parts[0].trim().toUpperCase());
                         String id = parts[1].trim();
@@ -107,17 +103,8 @@ public class DataManager {
                         String fullName = parts[4].trim();
                         String email = parts[5].trim();
                         String phone = parts[6].trim();
-                        String createdAt = parts[7].trim();
 
-                        // Check if file is monolithic legacy (>8 fields) or pure parent table (8 fields)
-                        if (parts.length > 8) {
-                            User legacyUser = parseMonolithicUser(parts, role, id, username, password, fullName, email, phone, createdAt);
-                            if (legacyUser != null) {
-                                monolithicFallbackList.add(legacyUser);
-                            }
-                        } else {
-                            baseUserMap.put(id, new BaseUserData(role, id, username, password, fullName, email, phone, createdAt));
-                        }
+                        baseUserMap.put(id, new BaseUserData(role, id, username, password, fullName, email, phone));
                     } catch (Exception ex) {
                         System.err.println("[DataManager] Error parsing parent user: " + line + " -> " + ex.getMessage());
                     }
@@ -125,13 +112,6 @@ public class DataManager {
             }
         } catch (IOException e) {
             System.err.println("[DataManager] Error reading users.txt: " + e.getMessage());
-        }
-
-        // If legacy monolithic format was detected in users.txt, migrate cleanly
-        if (!monolithicFallbackList.isEmpty() && baseUserMap.isEmpty()) {
-            users.addAll(monolithicFallbackList);
-            saveUsers();
-            return;
         }
 
         // Step 2: Read child tables and perform join on ID
@@ -155,28 +135,23 @@ public class DataManager {
                 BaseUserData b = entry.getValue();
                 switch (b.role) {
                     case ADMIN_STAFF:
-                        users.add(new AdminStaff(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt,
+                        users.add(new AdminStaff(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber,
                                 "Administration", "Morning (08:00 - 16:00)", "Admin Officer"));
                         break;
                     case MEDICAL_MANAGER:
-                        users.add(new MedicalManager(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt,
+                        users.add(new MedicalManager(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber,
                                 "Clinical Operations", "Medical Director", "General"));
                         break;
                     case DOCTOR:
-                        users.add(new Doctor(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt,
+                        users.add(new Doctor(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber,
                                 "General Medicine", "MBBS", "Room 101", 150.0));
                         break;
                     case PATIENT:
-                        users.add(new Patient(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt,
+                        users.add(new Patient(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber,
                                 "2000-01-01", "Unspecified", "O+", "N/A", "None"));
                         break;
                 }
             }
-        }
-
-        if (users.isEmpty()) {
-            seedDefaultUsers();
-            saveUsers();
         }
     }
 
@@ -197,7 +172,7 @@ public class DataManager {
                         String dept = parts[1].trim();
                         String shift = parts[2].trim();
                         String rank = parts[3].trim();
-                        users.add(new AdminStaff(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt, dept, shift, rank));
+                        users.add(new AdminStaff(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, dept, shift, rank));
                         processedIds.add(id);
                     }
                 }
@@ -224,7 +199,7 @@ public class DataManager {
                         String division = parts[1].trim();
                         String title = parts[2].trim();
                         String assignedDept = parts[3].trim();
-                        users.add(new MedicalManager(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt, division, title, assignedDept));
+                        users.add(new MedicalManager(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, division, title, assignedDept));
                         processedIds.add(id);
                     }
                 }
@@ -255,7 +230,7 @@ public class DataManager {
                         try {
                             fee = Double.parseDouble(parts[4].trim());
                         } catch (NumberFormatException ignored) {}
-                        users.add(new Doctor(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt, spec, qual, room, fee));
+                        users.add(new Doctor(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, spec, qual, room, fee));
                         processedIds.add(id);
                     }
                 }
@@ -284,7 +259,7 @@ public class DataManager {
                         String blood = parts[3].trim();
                         String emerg = parts[4].trim();
                         String history = parts[5].trim();
-                        users.add(new Patient(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, b.createdAt, dob, gender, blood, emerg, history));
+                        users.add(new Patient(b.id, b.username, b.password, b.fullName, b.email, b.phoneNumber, dob, gender, blood, emerg, history));
                         processedIds.add(id);
                     }
                 }
@@ -307,7 +282,7 @@ public class DataManager {
                 String division = parts.length > 8 ? parts[8].trim() : "Clinical Operations";
                 String title = parts.length > 9 ? parts[9].trim() : "Head of Medical Services";
                 String assignedDept = parts.length > 10 ? parts[10].trim() : "All Hospital Wards";
-                return new MedicalManager(id, username, password, fullName, email, phone, createdAt, division, title, assignedDept);
+                return new MedicalManager(id, username, password, fullName, email, phone, division, title, assignedDept);
 
             case DOCTOR:
                 String spec = parts.length > 8 ? parts[8].trim() : "Cardiology";
@@ -317,7 +292,7 @@ public class DataManager {
                 if (parts.length > 11 && !parts[11].trim().isEmpty()) {
                     try { fee = Double.parseDouble(parts[11].trim()); } catch (NumberFormatException ignored) {}
                 }
-                return new Doctor(id, username, password, fullName, email, phone, createdAt, spec, qual, room, fee);
+                return new Doctor(id, username, password, fullName, email, phone, spec, qual, room, fee);
 
             case PATIENT:
                 String dob = parts.length > 8 ? parts[8].trim() : "1994-06-12";
@@ -325,7 +300,7 @@ public class DataManager {
                 String blood = parts.length > 10 ? parts[10].trim() : "O+";
                 String emerg = parts.length > 11 ? parts[11].trim() : "N/A";
                 String history = parts.length > 12 ? parts[12].trim() : "None";
-                return new Patient(id, username, password, fullName, email, phone, createdAt, dob, gender, blood, emerg, history);
+                return new Patient(id, username, password, fullName, email, phone, dob, gender, blood, emerg, history);
 
             default:
                 return null;
@@ -341,7 +316,7 @@ public class DataManager {
             // 1. Save Parent table (users.txt)
             try (PrintWriter writer = new PrintWriter(new FileWriter(USERS_FILE))) {
                 writer.println("# APU Medical Centre - Parent Users Table (Authentication & Common Info)");
-                writer.println("# Format: ROLE|ID|USERNAME|PASSWORD|FULL_NAME|EMAIL|PHONE|CREATED_AT");
+                writer.println("# Format: ROLE|ID|USERNAME|PASSWORD|FULL_NAME|EMAIL|PHONE");
                 for (User user : users) {
                     writer.println(user.toBaseFileString());
                 }
@@ -398,90 +373,6 @@ public class DataManager {
         }
     }
 
-    private void seedDefaultUsers() {
-        users.clear();
-
-        // 1. Admin Staff
-        users.add(new AdminStaff(
-                "STF-101",
-                "admin_staff",
-                "admin123",
-                "Anna Watson",
-                "staff@apumedical.edu.my",
-                "+60 14-222 3456",
-                "Front Desk & Patient Admissions",
-                "Morning (08:00 - 16:00)",
-                "Lead Administrative Officer"
-        ));
-
-        // 2. Medical Manager
-        users.add(new MedicalManager(
-                "MGR-201",
-                "med_manager",
-                "manager123",
-                "Prof. Dr. Alex Wong",
-                "manager@apumedical.edu.my",
-                "+60 12-345 6789",
-                "Clinical Services & Governance",
-                "Chief Medical Director",
-                "Inpatient & Outpatient Divisions"
-        ));
-
-        // 3. Doctors
-        users.add(new Doctor(
-                "DOC-301",
-                "dr_smith",
-                "doctor123",
-                "Dr. Sarah Smith",
-                "doctor@apumedical.edu.my",
-                "+60 13-888 1234",
-                "Cardiology",
-                "MD, FACC, FRCP",
-                "Consultation Suite 302",
-                180.00
-        ));
-        users.add(new Doctor(
-                "DOC-302",
-                "dr_lee",
-                "doctor123",
-                "Dr. Michael Lee",
-                "m.lee@apumedical.edu.my",
-                "+60 17-777 5678",
-                "Pediatrics & Child Health",
-                "MBBS, MRCPCH",
-                "Pediatric Clinic 108",
-                120.00
-        ));
-
-        // 4. Patients
-        users.add(new Patient(
-                "PAT-401",
-                "patient_john",
-                "patient123",
-                "Johnathan Doe",
-                "john.doe@gmail.com",
-                "+60 18-999 1122",
-                "1992-08-14",
-                "Male",
-                "O+",
-                "+60 18-999 3344 (Mary Doe - Spouse)",
-                "Hypertension (Stage 1), Penicillin Allergy"
-        ));
-        users.add(new Patient(
-                "PAT-402",
-                "patient_emily",
-                "patient123",
-                "Emily Chen",
-                "emily.chen@gmail.com",
-                "+60 11-555 7788",
-                "1998-03-22",
-                "Female",
-                "B+",
-                "+60 11-555 9900 (Chen Wei - Father)",
-                "Asthma (Mild intermittent), No known allergies"
-        ));
-    }
-
     public List<User> getUsers() {
         return new ArrayList<>(users);
     }
@@ -499,6 +390,43 @@ public class DataManager {
             }
         }
         return null;
+    }
+
+    public boolean isUsernameTaken(String username) {
+        if (username == null) return false;
+        String query = username.trim().toLowerCase();
+        for (User u : users) {
+            if (u.getUsername().toLowerCase().equals(query)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isEmailTaken(String email) {
+        if (email == null) return false;
+        String query = email.trim().toLowerCase();
+        for (User u : users) {
+            if (u.getEmail().toLowerCase().equals(query)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized String generateNextPatientId() {
+        int maxId = 400;
+        for (User u : users) {
+            if (u instanceof Patient && u.getId() != null && u.getId().startsWith("PAT-")) {
+                try {
+                    int num = Integer.parseInt(u.getId().substring(4));
+                    if (num > maxId) {
+                        maxId = num;
+                    }
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+        return String.format("PAT-%03d", maxId + 1);
     }
 
     public void addUser(User user) {

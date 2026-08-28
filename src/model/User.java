@@ -18,7 +18,6 @@ public abstract class User implements Serializable {
     private String email;
     private String phoneNumber;
     private UserRole role;
-    private String createdAt;
 
     public User(String id, String username, String password, String fullName, String email, String phoneNumber, UserRole role) {
         this.id = id;
@@ -28,18 +27,6 @@ public abstract class User implements Serializable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.role = role;
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
-
-    public User(String id, String username, String password, String fullName, String email, String phoneNumber, UserRole role, String createdAt) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.createdAt = createdAt;
     }
 
     // Getters and Setters (Encapsulation)
@@ -99,13 +86,6 @@ public abstract class User implements Serializable {
         this.role = role;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
 
     /**
      * Polymorphic method to get role-specific summary details.
@@ -124,8 +104,7 @@ public abstract class User implements Serializable {
                 password,
                 fullName,
                 email,
-                phoneNumber,
-                createdAt
+                phoneNumber
         );
     }
 
