@@ -24,7 +24,7 @@ public class PatientRegistrationDialog extends JDialog {
     private JTextField fullNameField;
     private JTextField emailField;
     private JTextField phoneField;
-    private JTextField dobField;
+    private DatePicker dobPicker;
     private JComboBox<String> genderComboBox;
     private JComboBox<String> bloodGroupComboBox;
     private JTextField emergencyContactField;
@@ -127,9 +127,8 @@ public class PatientRegistrationDialog extends JDialog {
         contentPanel.add(createSectionHeader("3. Health & Personal Details"));
         contentPanel.add(Box.createVerticalStrut(8));
 
-        dobField = new JTextField("2000-01-01");
-        UITheme.styleTextField(dobField);
-        contentPanel.add(createFieldWrapper("Date of Birth (YYYY-MM-DD) *", dobField));
+        dobPicker = new DatePicker(java.time.LocalDate.of(2000, 1, 1));
+        contentPanel.add(createFieldWrapper("Date of Birth * (Click to select date)", dobPicker));
 
         // Gender & Blood Group in 2 columns
         JPanel rowPanel = new JPanel(new GridLayout(1, 2, 12, 0));
@@ -232,7 +231,7 @@ public class PatientRegistrationDialog extends JDialog {
         fullNameField.addKeyListener(enterListener);
         emailField.addKeyListener(enterListener);
         phoneField.addKeyListener(enterListener);
-        dobField.addKeyListener(enterListener);
+        dobPicker.addKeyListener(enterListener);
     }
 
     private JLabel createSectionHeader(String title) {
@@ -273,7 +272,8 @@ public class PatientRegistrationDialog extends JDialog {
         String fullName = fullNameField.getText().trim();
         String email = emailField.getText().trim();
         String phone = phoneField.getText().trim();
-        String dob = dobField.getText().trim();
+        String dob = dobPicker.getText();
+        java.time.LocalDate parsedDob = dobPicker.getDate();
         String gender = (String) genderComboBox.getSelectedItem();
         String bloodGroup = (String) bloodGroupComboBox.getSelectedItem();
         String emergencyContact = emergencyContactField.getText().trim();
@@ -282,6 +282,16 @@ public class PatientRegistrationDialog extends JDialog {
         // 1. Validation
         if (username.isEmpty() || password.isEmpty() || fullName.isEmpty() || email.isEmpty() || phone.isEmpty() || dob.isEmpty()) {
             errorLabel.setText("⚠ Please fill in all required fields (*).");
+            return;
+        }
+
+        if (parsedDob == null) {
+            errorLabel.setText("⚠ Please enter or select a valid Date of Birth (YYYY-MM-DD).");
+            return;
+        }
+
+        if (parsedDob.isAfter(java.time.LocalDate.now())) {
+            errorLabel.setText("⚠ Date of Birth cannot be in the future.");
             return;
         }
 
